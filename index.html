@@ -5,82 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Wake Rider — Draft or Die</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html, body {
-  width: 100%; height: 100%;
-  background: #2E5FA3;
-  overflow: hidden;
-  font-family: 'Courier New', monospace;
-}
-#c {
-  position: fixed; top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-}
-#hud-canvas {
-  position: fixed; top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 2;
-}
-.overlay {
-  position: fixed; inset: 0;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  z-index: 10;
-  pointer-events: all;
-}
-#startScreen { background: transparent; }
-#instrScreen  { background: rgba(10,20,50,0.92); }
-#endScreen    { background: rgba(10,20,50,0.92); }
-.hidden { display: none !important; }
-
-#start-svg-wrap {
-  display: flex; flex-direction: column; align-items: center;
-  pointer-events: none; user-select: none;
-}
-#start-subtitle {
-  font-size: clamp(14px,3vw,22px);
-  color: #A8E4FF; letter-spacing:.35em; margin-top:14px;
-  text-shadow: 0 0 18px #A8E4FF;
-}
-#click-to-begin {
-  margin-top:48px; font-size:clamp(13px,2.5vw,18px);
-  color:#E8C84A; letter-spacing:.3em;
-  text-shadow: 0 0 12px #E8C84A;
-  cursor:pointer; pointer-events:all;
-}
-.instr-title {
-  font-size:clamp(18px,4vw,28px); color:#E8C84A;
-  letter-spacing:.2em; margin-bottom:28px;
-  text-shadow: 0 0 16px #E8C84A;
-}
-.instr-body {
-  color:#A8E4FF; font-size:clamp(12px,2vw,16px);
-  line-height:2; text-align:center; max-width:480px; padding:0 20px;
-}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; background:#2E5FA3; overflow:hidden; font-family:'Courier New',monospace; }
+#c { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; }
+#hud-canvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:2; }
+.overlay { position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:10; pointer-events:all; }
+#startScreen { background:transparent; }
+#instrScreen  { background:rgba(10,20,50,0.92); }
+#endScreen    { background:rgba(10,20,50,0.92); }
+.hidden { display:none !important; }
+#start-svg-wrap { display:flex; flex-direction:column; align-items:center; pointer-events:none; user-select:none; }
+#start-subtitle { font-size:clamp(14px,3vw,22px); color:#A8E4FF; letter-spacing:.35em; margin-top:14px; text-shadow:0 0 18px #A8E4FF; }
+#click-to-begin { margin-top:48px; font-size:clamp(13px,2.5vw,18px); color:#E8C84A; letter-spacing:.3em; text-shadow:0 0 12px #E8C84A; cursor:pointer; pointer-events:all; }
+.instr-title { font-size:clamp(18px,4vw,28px); color:#E8C84A; letter-spacing:.2em; margin-bottom:28px; text-shadow:0 0 16px #E8C84A; }
+.instr-body { color:#A8E4FF; font-size:clamp(12px,2vw,16px); line-height:2; text-align:center; max-width:480px; padding:0 20px; }
 .instr-body b { color:#E8C84A; }
-.instr-body .danger { color:#FF4D1C; }
-.instr-start {
-  margin-top:36px; font-size:clamp(13px,2.5vw,18px);
-  color:#E8C84A; letter-spacing:.3em; cursor:pointer;
-  text-shadow: 0 0 12px #E8C84A;
-}
-.results-title {
-  font-size:clamp(22px,5vw,36px); color:#E8C84A;
-  letter-spacing:.2em; margin-bottom:24px;
-  text-shadow: 0 0 20px #E8C84A;
-}
-.results-stats {
-  color:#A8E4FF; font-size:clamp(14px,2.5vw,20px);
-  line-height:2.2; text-align:center;
-}
+.instr-start { margin-top:36px; font-size:clamp(13px,2.5vw,18px); color:#E8C84A; letter-spacing:.3em; cursor:pointer; text-shadow:0 0 12px #E8C84A; }
+.results-title { font-size:clamp(22px,5vw,36px); color:#E8C84A; letter-spacing:.2em; margin-bottom:24px; text-shadow:0 0 20px #E8C84A; }
+.results-stats { color:#A8E4FF; font-size:clamp(14px,2.5vw,20px); line-height:2.2; text-align:center; }
 .results-stats span { color:#E8C84A; }
-.results-retry {
-  margin-top:36px; font-size:clamp(13px,2.5vw,18px);
-  color:#E8C84A; letter-spacing:.3em; cursor:pointer;
-  text-shadow: 0 0 12px #E8C84A;
-}
+.results-retry { margin-top:36px; font-size:clamp(13px,2.5vw,18px); color:#E8C84A; letter-spacing:.3em; cursor:pointer; text-shadow:0 0 12px #E8C84A; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/tone@15.1.22/build/Tone.js"></script>
 <script type="importmap">
@@ -106,8 +50,7 @@ html, body {
           <feMerge><feMergeNode in="b2"/><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
       </defs>
-      <text x="260" y="76" text-anchor="middle"
-        font-family="'Courier New',monospace" font-size="72" font-weight="bold"
+      <text x="260" y="76" text-anchor="middle" font-family="'Courier New',monospace" font-size="72" font-weight="bold"
         fill="#E8C84A" filter="url(#gf)" letter-spacing="6">WAKE RIDER</text>
     </svg>
     <div id="start-subtitle">DRAFT OR DIE</div>
@@ -118,14 +61,15 @@ html, body {
 <div class="overlay hidden" id="instrScreen">
   <div class="instr-title">HOW TO RIDE</div>
   <div class="instr-body">
-    <b>MOVE MOUSE</b> to steer your wedge left and right<br>
-    <b>DRAFT</b> behind enemy ships to borrow their speed<br>
-    The <span style="color:#A8E4FF">ice-blue lock ring</span> shows when you're close<br><br>
-    <b>Complete 3 laps</b> of the circuit without losing momentum<br><br>
-    <span class="danger">Speed drops to zero = you dissolve</span><br>
-    <b>Chain</b> consecutive drafts for a higher speed floor<br><br>
-    The enemy formation is your engine.<br>
-    <b>When it breaks apart — so do you.</b>
+    <b>MOVE MOUSE</b> to steer left and right<br>
+    Get <b>BEHIND</b> an enemy ship to enter its wake<br>
+    The <span style="color:#A8E4FF">ice-blue ring</span> shows when you're in range<br><br>
+    <b>Complete 3 laps</b> of the circuit<br>
+    Ships loop — <b>wait for them to come back around</b><br><br>
+    <span style="color:#FF4D1C">Speed drops to zero = you dissolve</span><br>
+    <b>Chain</b> drafts to raise your speed floor<br><br>
+    <i>The enemy formation is your engine.<br>
+    When it breaks apart — so do you.</i>
   </div>
   <div class="instr-start" id="instr-go">▶ ENGAGE ENGINES ◀</div>
 </div>
@@ -145,15 +89,16 @@ import { AfterimagePass } from 'three/addons/postprocessing/AfterimagePass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
 // ─────────────────────────────────────────────
-// CONSTANTS
+// CONSTANTS — speeds in world units/second
 // ─────────────────────────────────────────────
-const BASE_SPEED  = 140; // world u/s
-const DRAFT_SPEED = 210;
-const MAX_SPEED   = 280;
-const FLOOR_SPEED =  80;
-const SPEED_FLOOR_GRACE = 2.5;
-const LAPS_TO_WIN = 3;
-const CHAIN_GAP   = 1.5;
+const BASE_SPEED   = 14;   // scaled down: original 140/10
+const DRAFT_SPEED  = 21;   // 210/10
+const MAX_SPEED    = 28;   // 280/10
+const FLOOR_SPEED  =  8;   //  80/10
+const SPEED_FLOOR_GRACE = 2.5; // seconds
+const LAPS_TO_WIN  = 3;
+const CHAIN_GAP    = 1.5;  // seconds
+const LAP_DISTANCE = 280;  // world units per lap (~20 seconds at base speed)
 
 // Colors
 const COL_GOLD = 0xE8C84A;
@@ -162,111 +107,17 @@ const COL_ICE  = 0xA8E4FF;
 const COL_SHIP = 0x1A3B6E;
 const COL_BG   = 0x2E5FA3;
 
-// TRACK: oval — player and ships orbit this in world space
-// Big enough to feel like a proper circuit
-const TRACK_RX = 36;  // half-width of oval
-const TRACK_RZ = 56;  // half-length of oval
-// Track perimeter ≈ 2π * sqrt((RX²+RZ²)/2) ≈ 290 world units
-
-// The track parameter t goes 0→1 for one lap
-// FORWARD on the track is +t direction, which means
-// t=0 is the "start line"
-
-// Lateral offset: player can move ±12 world units from track center
-const TRACK_LATERAL_MAX = 12;
-
-// Difficulty levels
+// Levels
 const LEVELS = [
-  { name:'First Wake',       ships:4,  shipSpeed:160, draftRadius:8.5, bleedRate:28, formation:'oval'     },
-  { name:'The Lane',         ships:6,  shipSpeed:175, draftRadius:8.5, bleedRate:32, formation:'dual'     },
-  { name:'The Split',        ships:7,  shipSpeed:190, draftRadius:8.0, bleedRate:36, formation:'figure8'  },
-  { name:'Compression',      ships:8,  shipSpeed:205, draftRadius:7.5, bleedRate:40, formation:'spiral'   },
-  { name:'Thread the Needle',ships:10, shipSpeed:220, draftRadius:7.0, bleedRate:44, formation:'oblique'  },
+  { name:'First Wake',        shipCount:4,  shipSpeed:16,  draftRadius:7.0, bleedRate:2.8, pattern:'oval'   },
+  { name:'The Lane',          shipCount:6,  shipSpeed:17.5,draftRadius:7.0, bleedRate:3.2, pattern:'dual'   },
+  { name:'The Split',         shipCount:7,  shipSpeed:19,  draftRadius:6.5, bleedRate:3.6, pattern:'stagger'},
+  { name:'Compression',       shipCount:8,  shipSpeed:20.5,draftRadius:6.0, bleedRate:4.0, pattern:'dense'  },
+  { name:'Thread the Needle', shipCount:10, shipSpeed:22,  draftRadius:5.5, bleedRate:4.4, pattern:'weave'  },
 ];
 
 // ─────────────────────────────────────────────
-// TRACK PARAMETRIC SYSTEM
-// ─────────────────────────────────────────────
-// Returns world position on the track oval at parameter t (0..1)
-function trackPoint(t) {
-  const a = t * Math.PI * 2;
-  return new THREE.Vector3(Math.cos(a) * TRACK_RX, 0, Math.sin(a) * TRACK_RZ);
-}
-
-// Track forward tangent at t (unit vector)
-function trackTangent(t) {
-  const a = t * Math.PI * 2;
-  const tx = -Math.sin(a) * TRACK_RX;
-  const tz =  Math.cos(a) * TRACK_RZ;
-  return new THREE.Vector3(tx, 0, tz).normalize();
-}
-
-// Track right-normal (lateral direction, pointing "outward" from center)
-function trackNormal(t) {
-  const tangent = trackTangent(t);
-  // Normal = tangent rotated 90° clockwise (right of direction of travel)
-  return new THREE.Vector3(tangent.z, 0, -tangent.x);
-}
-
-// World position: track center + lateral offset in normal direction
-function trackWorldPos(t, lateral) {
-  const center = trackPoint(t);
-  const normal = trackNormal(t);
-  return center.clone().addScaledVector(normal, lateral);
-}
-
-// Approximate dt in track parameter for a given distance traveled (at speed u/s, for dt seconds)
-// Track circumference ≈ 2π * mean_radius
-const TRACK_CIRCUMFERENCE = 2 * Math.PI * Math.sqrt((TRACK_RX * TRACK_RX + TRACK_RZ * TRACK_RZ) / 2);
-
-function speedToTrackDt(speed, dt) {
-  return (speed * dt) / TRACK_CIRCUMFERENCE;
-}
-
-// ─────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────
-let gameState = 'start'; // start | instructions | playing | results
-let currentLevel = 0;
-
-const player = {
-  t: 0,          // track parameter (0..1)
-  lateral: 0,    // lateral offset from track center (-12..12)
-  speed: BASE_SPEED,
-  worldPos: new THREE.Vector3(),
-  isDrafting: false,
-  draftStrength: 0,
-  coronaOpacity: 0,
-  draftTimer: 0,
-  floorTimer: 0,
-  chainCount: 0,
-  chainTimer: 0,
-  lap: 0,
-  bestChain: 0,
-  bestSpeed: 0,
-  dissolved: false,
-  lastDraftShipId: -1,
-  prevT: 0,
-};
-
-let ships = [];     // game ships
-let startShips = []; // start screen ships
-let particles = [];  // split particles
-let dissolveParts = [];
-let lockRings = [];
-
-let wallFlash = { active: false, timer: 0 };
-let lapCompleteFlash = 0;
-let formationSplitFired = false;
-let ghostPacerSplitActive = false;
-let ghostPacerSplitTimer = 0;
-let ghostCopies = [];
-
-// Cursor
-let cursorNorm = 0.5; // 0..1 across screen width
-
-// ─────────────────────────────────────────────
-// RENDERER + SCENE
+// RENDERER
 // ─────────────────────────────────────────────
 const canvas = document.getElementById('c');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -278,16 +129,13 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(COL_BG);
-scene.fog = new THREE.FogExp2(0x1a4a93, 0.008);
+scene.fog = new THREE.FogExp2(0x1a4a93, 0.025);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
 
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
-const bloomPass = new UnrealBloomPass(
-  new THREE.Vector2(window.innerWidth, window.innerHeight),
-  0.55, 0.4, 0.72
-);
+const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.55, 0.4, 0.72);
 composer.addPass(bloomPass);
 const afterimagePass = new AfterimagePass(0.0);
 composer.addPass(afterimagePass);
@@ -298,56 +146,49 @@ const hud = hudCanvas.getContext('2d');
 
 function resizeAll() {
   const w = window.innerWidth, h = window.innerHeight;
-  renderer.setSize(w, h);
-  composer.setSize(w, h);
-  camera.aspect = w / h;
-  camera.updateProjectionMatrix();
-  hudCanvas.width = w;
-  hudCanvas.height = h;
+  renderer.setSize(w, h); composer.setSize(w, h);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+  hudCanvas.width = w; hudCanvas.height = h;
 }
 resizeAll();
 window.addEventListener('resize', resizeAll);
 
 // ─────────────────────────────────────────────
-// OCEAN FLOOR
+// SCENE GEOMETRY
 // ─────────────────────────────────────────────
+// Ocean plane — follows player
 const ocean = new THREE.Mesh(
-  new THREE.PlaneGeometry(300, 300, 20, 20),
-  new THREE.MeshBasicMaterial({ color: 0x1a4080 })
+  new THREE.PlaneGeometry(500, 500, 30, 30),
+  new THREE.MeshBasicMaterial({ color: 0x1a4070 })
 );
 ocean.rotation.x = -Math.PI / 2;
-ocean.position.y = -0.6;
+ocean.position.y = -0.5;
 scene.add(ocean);
 
-// Track outline — dashed oval on the ocean
-function buildTrackOutline() {
-  const pts = [];
-  for (let i = 0; i <= 120; i++) {
-    const t = i / 120;
-    const p = trackPoint(t);
-    pts.push(p);
-  }
-  const geo = new THREE.BufferGeometry().setFromPoints(pts);
-  const mat = new THREE.LineBasicMaterial({ color: 0x2060c0, transparent: true, opacity: 0.3 });
-  return new THREE.Line(geo, mat);
+// Animated ocean grid
+const gridMat = new THREE.LineBasicMaterial({ color: 0x2055a0, transparent: true, opacity: 0.4 });
+const gridLines = [];
+for (let i = -12; i <= 12; i += 2) {
+  const geo = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(i * 1.5, -0.3, -200),
+    new THREE.Vector3(i * 1.5, -0.3,  200)
+  ]);
+  gridLines.push(new THREE.Line(geo, gridMat));
+  scene.add(gridLines[gridLines.length - 1]);
 }
-scene.add(buildTrackOutline());
-
-// Start line marker
-const startLineGeo = new THREE.PlaneGeometry(24, 0.5);
-const startLineMat = new THREE.MeshBasicMaterial({ color: 0xE8C84A, transparent: true, opacity: 0.7 });
-const startLineMesh = new THREE.Mesh(startLineGeo, startLineMat);
-// Place at t=0 (trackPoint(0) = (TRACK_RX, 0, 0))
-const slPos = trackPoint(0);
-startLineMesh.position.set(slPos.x, 0.01, slPos.z);
-startLineMesh.rotation.x = -Math.PI / 2;
-scene.add(startLineMesh);
+for (let z = -200; z <= 200; z += 10) {
+  const geo = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(-18, -0.3, z),
+    new THREE.Vector3( 18, -0.3, z)
+  ]);
+  const line = new THREE.Line(geo, gridMat);
+  scene.add(line);
+  gridLines.push(line);
+}
 
 // Wall flash overlay
-const wallFlashMat = new THREE.MeshBasicMaterial({
-  color: COL_RED, transparent: true, opacity: 0, wireframe: true
-});
-const wallFlashMesh = new THREE.Mesh(new THREE.PlaneGeometry(200, 200, 12, 12), wallFlashMat);
+const wallFlashMat = new THREE.MeshBasicMaterial({ color: COL_RED, transparent: true, opacity: 0, wireframe: true });
+const wallFlashMesh = new THREE.Mesh(new THREE.PlaneGeometry(60, 60, 10, 10), wallFlashMat);
 wallFlashMesh.rotation.x = -Math.PI / 2;
 wallFlashMesh.position.y = -0.3;
 scene.add(wallFlashMesh);
@@ -357,153 +198,119 @@ scene.add(wallFlashMesh);
 // ─────────────────────────────────────────────
 function buildPlayerMesh() {
   const g = new THREE.Group();
-
-  // Main wedge: triangle wider than long
+  // Wedge: wider than long
   const shape = new THREE.Shape();
-  shape.moveTo(0, 1.4);       // leading tip (forward = +Z in local space)
-  shape.lineTo(-1.1, -0.9);
-  shape.lineTo(1.1, -0.9);
-  shape.closePath();
-
+  shape.moveTo(0, 1.3); shape.lineTo(-1.0, -0.85); shape.lineTo(1.0, -0.85); shape.closePath();
   const geo = new THREE.ShapeGeometry(shape);
-  const mat = new THREE.MeshBasicMaterial({ color: COL_GOLD });
-  const wedge = new THREE.Mesh(geo, mat);
-  wedge.rotation.x = -Math.PI / 2;
-  g.add(wedge);
-
-  const edgeMat = new THREE.LineBasicMaterial({ color: 0xFFFDE8 });
-  const edge = new THREE.LineSegments(new THREE.EdgesGeometry(geo), edgeMat);
-  edge.rotation.x = -Math.PI / 2;
-  g.add(edge);
+  g.add(new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: COL_GOLD })));
+  g.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color: 0xFFFDE8 })));
+  // Rotate to flat
+  g.children.forEach(c => c.rotation.x = -Math.PI / 2);
 
   // Stabilizer fins
-  [[-1.1, -0.9, -20], [1.1, -0.9, 20]].forEach(([fx, fz, ang]) => {
+  [[-1.0, -0.85, -0.35], [1.0, -0.85, 0.35]].forEach(([x, z, ya]) => {
     const fs = new THREE.Shape();
-    fs.moveTo(0, 0); fs.lineTo(-0.35, -0.5); fs.lineTo(0.35, -0.2); fs.closePath();
+    fs.moveTo(0,0); fs.lineTo(-0.3,-0.45); fs.lineTo(0.3,-0.18); fs.closePath();
     const fm = new THREE.Mesh(new THREE.ShapeGeometry(fs), new THREE.MeshBasicMaterial({ color: COL_GOLD }));
     fm.rotation.x = -Math.PI / 2;
-    fm.position.set(fx, 0, fz * 0.9);
-    fm.rotation.y = (ang * Math.PI) / 180;
+    fm.position.set(x, 0, z * 0.85);
+    fm.rotation.y = ya;
     g.add(fm);
   });
 
-  // Corona glow (at trailing edge)
-  const coronaGeo = new THREE.PlaneGeometry(2.4, 1.1);
-  const coronaMat = new THREE.MeshBasicMaterial({
-    color: COL_ICE, transparent: true, opacity: 0,
-    side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending
-  });
-  const corona = new THREE.Mesh(coronaGeo, coronaMat);
-  corona.rotation.x = -Math.PI / 2;
-  corona.position.set(0, 0.05, -0.85);
-  corona.name = 'corona';
-  g.add(corona);
-
+  // Corona
+  const cm = new THREE.Mesh(
+    new THREE.PlaneGeometry(2.2, 1.0),
+    new THREE.MeshBasicMaterial({ color: COL_ICE, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending })
+  );
+  cm.rotation.x = -Math.PI / 2; cm.position.set(0, 0.05, -0.8); cm.name = 'corona';
+  g.add(cm);
   return g;
 }
 
 const playerMesh = buildPlayerMesh();
 scene.add(playerMesh);
 
-// Camera Z smooth
-let cameraZSmooth = 0;
-let cameraXSmooth = 0;
-
 // ─────────────────────────────────────────────
 // SHIP MODEL
 // ─────────────────────────────────────────────
 function buildShipMesh() {
   const g = new THREE.Group();
-  const W = 0.75, L = 3.2;
+  const W = 0.7, L = 3.0;
   const shape = new THREE.Shape();
-  shape.moveTo(0, L * 0.5);
-  shape.lineTo(W * 0.55, L * 0.32); shape.lineTo(W, 0);
-  shape.lineTo(W * 0.55, -L * 0.32); shape.lineTo(0, -L * 0.5);
-  shape.lineTo(-W * 0.55, -L * 0.32); shape.lineTo(-W, 0);
-  shape.lineTo(-W * 0.55, L * 0.32); shape.closePath();
-
+  shape.moveTo(0, L*0.5); shape.lineTo(W*0.55, L*0.32); shape.lineTo(W, 0);
+  shape.lineTo(W*0.55, -L*0.32); shape.lineTo(0, -L*0.5);
+  shape.lineTo(-W*0.55, -L*0.32); shape.lineTo(-W, 0); shape.lineTo(-W*0.55, L*0.32);
+  shape.closePath();
   const geo = new THREE.ShapeGeometry(shape);
   g.add(new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: COL_SHIP })));
-  const rim = new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color: COL_GOLD }));
-  g.add(rim);
-
-  // Flatten
+  g.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color: COL_GOLD })));
   g.rotation.x = -Math.PI / 2;
   return g;
 }
 
-// Lock ring
 function buildLockRing() {
-  const geo = new THREE.RingGeometry(4.2, 4.6, 48);
-  const mat = new THREE.MeshBasicMaterial({
-    color: COL_ICE, transparent: true, opacity: 0,
-    side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending
-  });
-  const r = new THREE.Mesh(geo, mat);
-  r.rotation.x = -Math.PI / 2;
-  r.position.y = 0.25;
-  return r;
+  const m = new THREE.Mesh(
+    new THREE.RingGeometry(4.0, 4.4, 48),
+    new THREE.MeshBasicMaterial({ color: COL_ICE, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending })
+  );
+  m.rotation.x = -Math.PI / 2; m.position.y = 0.2;
+  return m;
 }
 
 // ─────────────────────────────────────────────
-// WAKE TRAIL
+// STATE
 // ─────────────────────────────────────────────
-const TRAIL_LIFETIME = 1.2;
-let globalTrailTimer = 0;
-const TRAIL_INTERVAL = 0.06;
+let gameState = 'start';
+let currentLevel = 0;
 
-function updateAndRenderTrail(ship, dt) {
-  // Add new point every interval
-  ship.trailTimer = (ship.trailTimer || 0) + dt;
-  if (ship.trailTimer >= TRAIL_INTERVAL) {
-    ship.trailTimer = 0;
-    ship.wakePoints.push({
-      pos: ship.mesh.position.clone(),
-      heading: ship.heading.clone(),
-      age: 0,
-    });
-  }
+const player = {
+  x: 0, z: 0,          // world position (y always 0)
+  speed: BASE_SPEED,
+  isDrafting: false,
+  draftStrength: 0,
+  coronaOpacity: 0,
+  draftTimer: 0,
+  floorTimer: 0,
+  chainCount: 0,
+  chainTimer: 0,
+  lap: 0,
+  lapDist: 0,           // cumulative Z distance traveled
+  bestChain: 0,
+  bestSpeed: 0,
+  dissolved: false,
+  lastDraftShipId: -1,
+};
 
-  // Age
-  for (const p of ship.wakePoints) p.age += dt;
-  ship.wakePoints = ship.wakePoints.filter(p => p.age < TRAIL_LIFETIME);
+let ships = [];
+let startShips = [];
+let particles = [];
+let dissolveParts = [];
 
-  const pts = ship.wakePoints;
-  if (pts.length < 2) return;
+let wallFlash = { active: false, timer: 0 };
+let lapCompleteFlash = 0;
+let formationSplitFired = false;
+let ghostPacerSplitActive = false;
+let ghostPacerSplitTimer = 0;
+let ghostCopies = [];
+let lastTime = null;
+let cameraZSmooth = 0;
+let cursorNorm = 0.5;
 
-  // Build line geometry: chevron spreading outward with age
-  const positions = [];
-  for (let i = 0; i < pts.length; i++) {
-    const p = pts[i];
-    const spread = 0.4 + (p.age / TRAIL_LIFETIME) * 3.0;
-    const right = new THREE.Vector3(-p.heading.z, 0, p.heading.x);
-    positions.push(
-      p.pos.x - right.x * spread, p.pos.y + 0.1, p.pos.z - right.z * spread,
-      p.pos.x + right.x * spread, p.pos.y + 0.1, p.pos.z + right.z * spread
-    );
-  }
+// ─────────────────────────────────────────────
+// SHIP PATROL PATHS
+// ─────────────────────────────────────────────
+// Each ship has a looping X offset pattern relative to player's Z
+// Ships move forward at their speed; when they get too far ahead
+// they loop back. Their X position follows a sinusoidal pattern.
+// "lateral" = horizontal offset from track center
+// "phase" = phase offset for the X pattern
 
-  if (!ship.wakeLine) {
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions.length), 3));
-    const mat = new THREE.LineBasicMaterial({
-      color: COL_ICE, transparent: true, opacity: 0.55,
-      depthWrite: false, blending: THREE.AdditiveBlending
-    });
-    ship.wakeLine = new THREE.LineSegments(geo, mat);
-    scene.add(ship.wakeLine);
-  }
-
-  const geo = ship.wakeLine.geometry;
-  const buf = geo.attributes.position;
-  if (buf.array.length !== positions.length) {
-    geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions.length), 3));
-  }
-  const arr = geo.attributes.position.array;
-  for (let i = 0; i < positions.length; i++) arr[i] = positions[i];
-  geo.attributes.position.needsUpdate = true;
-  geo.setDrawRange(0, positions.length / 3);
-  geo.computeBoundingSphere();
+function computeShipX(ship, playerZ) {
+  // Ship's X = base lateral + amplitude * sin(frequency * (ship.z - playerZ) + phase)
+  // This creates a weaving pattern
+  const relZ = ship.z - playerZ;
+  return ship.baseLateral + ship.ampX * Math.sin(ship.freqX * relZ + ship.phase);
 }
 
 // ─────────────────────────────────────────────
@@ -520,32 +327,31 @@ function clearLevel() {
   particles = [];
   ghostCopies = [];
   ghostPacerSplitActive = false;
+  dissolveParts.forEach(p => scene.remove(p.mesh));
+  dissolveParts = [];
 }
 
-function spawnShip(tOffset, lateralOffset = 0, isGhost = false) {
+function spawnShip(aheadDist, baseLateral, ampX, freqX, phase, isGhost=false) {
   const mesh = buildShipMesh();
   const lockRing = buildLockRing();
   scene.add(mesh);
   scene.add(lockRing);
 
-  const worldPos = trackWorldPos(tOffset, lateralOffset);
-  mesh.position.copy(worldPos);
-  mesh.position.y = 0;
-
-  return {
+  const ship = {
     id: Math.random(),
     mesh, lockRing,
-    t: tOffset,
-    lateral: lateralOffset,
-    heading: trackTangent(tOffset).clone(),
-    wakePoints: [],
-    trailTimer: 0,
+    z: player.z + aheadDist,
+    x: baseLateral,
+    baseLateral, ampX, freqX, phase,
+    heading: new THREE.Vector3(0, 0, 1),
+    prevX: baseLateral,
+    isGhost, isCopy: false,
+    shimmerTimer: 0, splitAngle: 0,
+    wakePoints: [], trailTimer: 0,
     lockRingOpacity: 0,
-    isGhost,
-    isCopy: false,
-    shimmerTimer: 0,
-    splitAngle: 0, // for copies
+    loopDist: 0,  // for tracking when ship has lapped (for ghost copies: divergence)
   };
+  return ship;
 }
 
 function setupLevel(lvIdx) {
@@ -553,306 +359,173 @@ function setupLevel(lvIdx) {
   currentLevel = lvIdx;
   const lv = LEVELS[lvIdx];
 
-  // Player starts at t=0 (start line), lateral=0
-  player.t = 0;
-  player.prevT = 0;
-  player.lateral = 0;
+  player.x = 0; player.z = 0;
   player.speed = BASE_SPEED;
-  player.isDrafting = false;
-  player.draftStrength = 0;
-  player.coronaOpacity = 0;
-  player.draftTimer = 0;
-  player.floorTimer = 0;
-  player.chainCount = 0;
-  player.chainTimer = 0;
-  player.lap = 0;
-  player.bestChain = 0;
-  player.bestSpeed = 0;
-  player.dissolved = false;
-  player.lastDraftShipId = -1;
+  player.isDrafting = false; player.draftStrength = 0; player.coronaOpacity = 0;
+  player.draftTimer = 0; player.floorTimer = 0;
+  player.chainCount = 0; player.chainTimer = 0;
+  player.lap = 0; player.lapDist = 0;
+  player.bestChain = 0; player.bestSpeed = 0;
+  player.dissolved = false; player.lastDraftShipId = -1;
   playerMesh.visible = true;
-  dissolveParts.forEach(p => scene.remove(p.mesh));
-  dissolveParts = [];
+  formationSplitFired = false;
 
-  if (lv.formation === 'oval') {
-    for (let i = 0; i < lv.ships; i++) {
-      ships.push(spawnShip(i / lv.ships, 0));
+  // Ship patterns per level
+  if (lv.pattern === 'oval') {
+    // 4 ships in loose oval — evenly spaced ahead, gentle weave
+    for (let i = 0; i < lv.shipCount; i++) {
+      ships.push(spawnShip(
+        12 + i * (LAP_DISTANCE / lv.shipCount), // evenly spaced around the circuit
+        Math.sin(i * Math.PI * 2 / lv.shipCount) * 6, // lateral offset
+        4, 0.08, i * Math.PI * 0.5 // gentle weave
+      ));
     }
-  } else if (lv.formation === 'dual') {
-    const half = Math.floor(lv.ships / 2);
-    for (let i = 0; i < half; i++) ships.push(spawnShip(i / half, -5));
-    for (let i = 0; i < lv.ships - half; i++) ships.push(spawnShip(i / (lv.ships - half), 5));
-  } else if (lv.formation === 'figure8') {
-    for (let i = 0; i < 6; i++) ships.push(spawnShip(i / 6, (i % 2 === 0 ? -4 : 4)));
-    // Ghost pacer at t=0 ahead of player
-    const ghost = spawnShip(0.15, 0, true);
+  } else if (lv.pattern === 'dual') {
+    // Two columns, 3 per lane
+    const half = Math.floor(lv.shipCount / 2);
+    for (let i = 0; i < half; i++) {
+      ships.push(spawnShip(12 + i * (LAP_DISTANCE / half), -7, 2, 0.06, i * 1.2));
+    }
+    for (let i = 0; i < lv.shipCount - half; i++) {
+      ships.push(spawnShip(15 + i * (LAP_DISTANCE / (lv.shipCount - half)), 7, 2, 0.06, i * 1.2 + 0.6));
+    }
+  } else if (lv.pattern === 'stagger') {
+    // 6 regular + 1 ghost pacer
+    for (let i = 0; i < 6; i++) {
+      const lat = (i % 2 === 0) ? -5 : 5;
+      ships.push(spawnShip(10 + i * (LAP_DISTANCE / 6), lat, 3, 0.1, i));
+    }
+    const ghost = spawnShip(8, 0, 5, 0.05, 0, true);
     ships.push(ghost);
-  } else if (lv.formation === 'spiral') {
-    for (let i = 0; i < lv.ships; i++) {
-      const spiralLat = Math.sin(i / lv.ships * Math.PI * 4) * 6;
-      ships.push(spawnShip(i / lv.ships, spiralLat));
+  } else if (lv.pattern === 'dense') {
+    for (let i = 0; i < lv.shipCount; i++) {
+      ships.push(spawnShip(10 + i * (LAP_DISTANCE / lv.shipCount),
+        Math.cos(i * 1.3) * 8, 5, 0.12, i * 0.8));
     }
-  } else { // oblique
-    for (let i = 0; i < lv.ships; i++) {
-      const lat = Math.sin(i * 0.7) * 8;
-      ships.push(spawnShip(i / lv.ships, lat));
+  } else { // weave
+    for (let i = 0; i < lv.shipCount; i++) {
+      ships.push(spawnShip(8 + i * (LAP_DISTANCE / lv.shipCount),
+        Math.sin(i * 0.9) * 9, 6, 0.15, i * 0.6));
     }
   }
 
-  // Position camera
-  const playerWorld = trackWorldPos(player.t, player.lateral);
-  cameraZSmooth = playerWorld.z - 12;
-  cameraXSmooth = playerWorld.x;
+  cameraZSmooth = player.z - 12;
+  playerMesh.position.set(player.x, 0, player.z);
 }
 
 // ─────────────────────────────────────────────
-// AUDIO
+// WAKE TRAIL
 // ─────────────────────────────────────────────
-let audioReady = false;
-let musicModeInDraft = false;
-let bassFilter, bassGain, bass, bassHigh, bassHighGain, bassHighFilter;
-let padGain, pad, hihatGain, hihat, kick;
-let sfxDraftEnter, sfxBreakMembrane, sfxBreakSynth;
-let sfxSpeedBleed, sfxSpeedBleedActive = false;
-let sfxChainLock, sfxWallHit;
+const TRAIL_LIFETIME = 1.2;
 
-function initAudio() {
-  if (audioReady) return;
-  audioReady = true;
-  try {
-    Tone.start();
-    Tone.getTransport().bpm.value = 138;
+function updateAndRenderTrail(ship, dt) {
+  ship.trailTimer = (ship.trailTimer || 0) + dt;
+  if (ship.trailTimer >= 0.06) {
+    ship.trailTimer = 0;
+    ship.wakePoints.push({ x: ship.mesh.position.x, z: ship.mesh.position.z, heading: ship.heading.clone(), age: 0 });
+  }
+  for (const p of ship.wakePoints) p.age += dt;
+  ship.wakePoints = ship.wakePoints.filter(p => p.age < TRAIL_LIFETIME);
 
-    // Bass
-    bassFilter = new Tone.Filter(400, 'lowpass');
-    bassGain = new Tone.Volume(-6);
-    bass = new Tone.Synth({ oscillator:{type:'sawtooth'}, envelope:{attack:0.01,decay:0.1,sustain:0.9,release:0.1} });
-    bass.connect(bassFilter); bassFilter.connect(bassGain); bassGain.toDestination();
+  const pts = ship.wakePoints;
+  if (pts.length < 2) return;
 
-    // Second bass
-    bassHighFilter = new Tone.Filter(5000, 'lowpass');
-    bassHighGain = new Tone.Volume(-12);
-    bassHigh = new Tone.Synth({ oscillator:{type:'sawtooth'}, envelope:{attack:0.05,decay:0.1,sustain:0.9,release:0.1} });
-    bassHigh.connect(bassHighFilter); bassHighFilter.connect(bassHighGain); bassHighGain.toDestination();
-    bassHighGain.mute = true;
+  const positions = [];
+  for (const p of pts) {
+    const spread = 0.3 + (p.age / TRAIL_LIFETIME) * 3.5;
+    const rx = -p.heading.z, rz = p.heading.x;
+    positions.push(p.x - rx * spread, 0.05, p.z - rz * spread);
+    positions.push(p.x + rx * spread, 0.05, p.z + rz * spread);
+  }
 
-    // Pad
-    padGain = new Tone.Volume(-8);
-    pad = new Tone.PolySynth(Tone.Synth, { oscillator:{type:'sine'}, envelope:{attack:0.8,decay:0.5,sustain:0.8,release:2.0} });
-    pad.connect(padGain); padGain.toDestination();
-
-    // Hi-hat
-    hihatGain = new Tone.Volume(-16);
-    hihat = new Tone.MetalSynth({ frequency:400, envelope:{attack:0.001,decay:0.05,release:0.01}, harmonicity:5.1, modulationIndex:32, resonance:4000, octaves:1.5 });
-    hihat.connect(hihatGain); hihatGain.toDestination();
-
-    // Kick
-    kick = new Tone.MembraneSynth({ pitchDecay:0.07, octaves:5, envelope:{attack:0.001,decay:0.3,sustain:0,release:0.1} });
-    kick.toDestination();
-
-    // Sequencer
-    const bassNotes = ['F1','F1','Eb1','F1','F1','Ab1','Eb1','F1'];
-    let bn = 0;
-    new Tone.Loop(t => {
-      const note = bassNotes[bn % bassNotes.length];
-      bass.triggerAttackRelease(note, '8n', t);
-      if (!bassHighGain.mute) {
-        const hn = note.replace(/(\d)/, n => String(+n+1));
-        bassHigh.triggerAttackRelease(hn, '8n', t);
-      }
-      bn++;
-    }, '8n').start(0);
-
-    new Tone.Loop(t => { hihat.triggerAttackRelease('16n', t); }, '16n').start(0);
-
-    let kn = 0;
-    new Tone.Loop(t => {
-      if (kn % 2 === 0) kick.triggerAttackRelease('C1', '8n', t);
-      kn++;
-    }, '4n').start(0);
-
-    new Tone.Loop(t => {
-      pad.triggerAttackRelease(['F3','Ab3','C4'], '2n', t);
-    }, '1m').start(0);
-
-    Tone.getTransport().start();
-
-    // SFX
-    sfxDraftEnter = new Tone.Synth({ oscillator:{type:'sine'}, envelope:{attack:0.05,decay:0.15,sustain:0.6,release:0.2} }).toDestination();
-    sfxDraftEnter.volume.value = -8;
-
-    sfxBreakMembrane = new Tone.MembraneSynth({ pitchDecay:0.04, octaves:4, envelope:{attack:0.001,decay:0.15,sustain:0,release:0.1} }).toDestination();
-    sfxBreakMembrane.volume.value = -4;
-
-    sfxBreakSynth = new Tone.Synth({ oscillator:{type:'sine'}, envelope:{attack:0.01,decay:0.25,sustain:0.3,release:0.3} }).toDestination();
-    sfxBreakSynth.volume.value = -4;
-
-    const bleedOsc = new Tone.Synth({ oscillator:{type:'sine'}, envelope:{attack:0.1,decay:0.5,sustain:0.8,release:0.3} }).toDestination();
-    bleedOsc.frequency.value = 60; bleedOsc.volume.value = -20;
-    new Tone.LFO({ frequency:1.4, type:'sine', min:-34, max:-20 }).connect(bleedOsc.volume).start();
-    sfxSpeedBleed = bleedOsc;
-
-    sfxChainLock = new Tone.Synth({ oscillator:{type:'triangle'}, envelope:{attack:0.01,decay:0.3,sustain:0,release:0.1} }).toDestination();
-    sfxChainLock.volume.value = -10;
-
-    sfxWallHit = new Tone.MetalSynth({ frequency:40, envelope:{attack:0.001,decay:0.4,release:0.2}, harmonicity:3.1, modulationIndex:12, resonance:3200, octaves:1.2 }).toDestination();
-    sfxWallHit.volume.value = -2;
-
-  } catch(e) {}
-}
-
-function setMusicDraft(inDraft) {
-  if (!audioReady || musicModeInDraft === inDraft) return;
-  musicModeInDraft = inDraft;
-  try {
-    if (inDraft) {
-      bassFilter.frequency.rampTo(2800, 0.8);
-      bassHighGain.mute = false;
-      padGain.volume.rampTo(-2, 0.8);
-      hihatGain.volume.rampTo(-10, 0.8);
-    } else {
-      bassFilter.frequency.rampTo(400, 0.3);
-      bassHighGain.mute = true;
-      padGain.volume.rampTo(-8, 0.8);
-      hihatGain.volume.rampTo(-16, 0.8);
-    }
-  } catch(e) {}
-}
-
-function sfx_draftEnter() {
-  if (!audioReady || !sfxDraftEnter) return;
-  try { sfxDraftEnter.triggerAttackRelease(180, 0.4); sfxDraftEnter.frequency.rampTo(340, 0.4); } catch(e) {}
-}
-
-function sfx_draftBreak() {
-  if (!audioReady) return;
-  try {
-    sfxBreakMembrane.triggerAttackRelease(200, 0.05);
-    setTimeout(() => { try { sfxBreakSynth.triggerAttackRelease(280, 0.45); sfxBreakSynth.frequency.rampTo(90, 0.45); } catch(e){} }, 60);
-  } catch(e) {}
-}
-
-function sfx_chainLock() {
-  if (!audioReady || !sfxChainLock) return;
-  try {
-    sfxChainLock.triggerAttackRelease(880, 0.3);
-    setTimeout(() => { try { sfxChainLock.triggerAttackRelease(1320, 0.3); } catch(e){} }, 150);
-  } catch(e) {}
-}
-
-function sfx_wallHit() {
-  if (!audioReady || !sfxWallHit) return;
-  try { sfxWallHit.triggerAttackRelease('40n'); } catch(e) {}
-}
-
-function sfx_formationSplit() {
-  if (!audioReady) return;
-  try {
-    const freqs = [180,210,220,245,270];
-    const pans  = [-1,-0.5,0,0.5,1];
-    freqs.forEach((freq, i) => {
-      const panner = new Tone.Panner(pans[i]).toDestination();
-      const s = new Tone.Synth({ oscillator:{type:'sine'}, envelope:{attack:0.05,decay:1.2,sustain:0.5,release:1.2} }).connect(panner);
-      s.volume.value = -12;
-      s.triggerAttackRelease(220, 2.0);
-      s.frequency.rampTo(freq, 1.5);
-      setTimeout(() => { try { s.dispose(); panner.dispose(); } catch(e){} }, 4000);
-    });
-    if (padGain) {
-      setTimeout(() => { try { padGain.volume.rampTo(-40, 0.1); } catch(e){} }, 300);
-      setTimeout(() => { try { padGain.volume.rampTo(-8, 0.5); } catch(e){} }, 700);
-    }
-  } catch(e) {}
+  if (!ship.wakeLine) {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions.length), 3));
+    ship.wakeLine = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({
+      color: COL_ICE, transparent: true, opacity: 0.5, depthWrite: false, blending: THREE.AdditiveBlending
+    }));
+    scene.add(ship.wakeLine);
+  }
+  const buf = ship.wakeLine.geometry.attributes.position;
+  if (buf.array.length !== positions.length) {
+    ship.wakeLine.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions.length), 3));
+  }
+  const arr = ship.wakeLine.geometry.attributes.position.array;
+  for (let i = 0; i < positions.length; i++) arr[i] = positions[i];
+  ship.wakeLine.geometry.attributes.position.needsUpdate = true;
+  ship.wakeLine.geometry.setDrawRange(0, positions.length / 3);
+  ship.wakeLine.geometry.computeBoundingSphere();
 }
 
 // ─────────────────────────────────────────────
-// DRAFT COMPUTATION
+// DRAFT COMPUTATION  (world space)
 // ─────────────────────────────────────────────
-// Convert track parameter difference to angular separation
-// Returns draft strength 0..1
-function computeDraftStrength(ship) {
-  // Get world positions
-  const px = player.worldPos.x, pz = player.worldPos.z;
-  const sx = ship.mesh.position.x, sz = ship.mesh.position.z;
-
-  const dx = px - sx, dz = pz - sz;
+function computeDraft(ship) {
+  const dx = player.x - ship.mesh.position.x;
+  const dz = player.z - ship.mesh.position.z;
   const dist = Math.sqrt(dx * dx + dz * dz);
   const R = LEVELS[currentLevel].draftRadius;
-
   if (dist > R) return 0;
 
-  // Check: player must be BEHIND the ship (dot with ship heading < 0)
+  // Must be behind ship (player's dz relative to ship heading < 0)
   const sh = ship.heading;
   const dot = (dx * sh.x + dz * sh.z) / Math.max(0.001, dist);
-  // dot < 0 means player is behind ship's heading
-  if (dot > 0.1) return 0; // player is in front or beside
+  if (dot > 0.1) return 0; // player in front
 
-  // Angle from ship's reverse heading
   const angle = Math.acos(Math.max(-1, Math.min(1, -dot)));
   const lateralFactor = Math.cos(angle) * Math.cos(angle);
 
-  // Depth (teardrop) - normalized 0..1 along R
   const dNorm = dist / R;
   let depthFactor;
-  if (dNorm <= 0.36) {
-    depthFactor = 1.0;
-  } else if (dNorm <= 0.72) {
-    depthFactor = THREE.MathUtils.lerp(1.0, 0.6, (dNorm - 0.36) / 0.36);
-  } else {
-    depthFactor = THREE.MathUtils.lerp(0.6, 0.0, (dNorm - 0.72) / 0.28);
-  }
+  if (dNorm <= 0.36) depthFactor = 1.0;
+  else if (dNorm <= 0.72) depthFactor = THREE.MathUtils.lerp(1.0, 0.6, (dNorm - 0.36) / 0.36);
+  else depthFactor = THREE.MathUtils.lerp(0.6, 0.0, (dNorm - 0.72) / 0.28);
 
   return lateralFactor * depthFactor;
 }
 
-function isInApproachRadius(ship) {
-  const px = player.worldPos.x, pz = player.worldPos.z;
-  const sx = ship.mesh.position.x, sz = ship.mesh.position.z;
-  const dx = px - sx, dz = pz - sz;
+function inApproach(ship) {
+  const dx = player.x - ship.mesh.position.x;
+  const dz = player.z - ship.mesh.position.z;
   const dist = Math.sqrt(dx * dx + dz * dz);
-  const R = LEVELS[currentLevel].draftRadius * 1.2; // approach threshold = 130% of draft radius
+  const R = LEVELS[currentLevel].draftRadius * 1.2;
   if (dist > R) return false;
-  // Must be roughly behind the ship
   const sh = ship.heading;
   const dot = (dx * sh.x + dz * sh.z) / Math.max(0.001, dist);
   return dot < 0.3;
 }
 
 // ─────────────────────────────────────────────
-// PARTICLES (formation split)
+// PARTICLES
 // ─────────────────────────────────────────────
 function spawnSplitParticles(pos) {
   for (let i = 0; i < 48; i++) {
-    const angle = (i / 48) * Math.PI * 2;
+    const a = (i / 48) * Math.PI * 2;
     const spd = 8 + Math.random() * 4;
-    const geo = new THREE.SphereGeometry(0.15, 4, 4);
     const mat = new THREE.MeshBasicMaterial({ color: COL_ICE, transparent: true, opacity: 1, blending: THREE.AdditiveBlending });
-    const mesh = new THREE.Mesh(geo, mat);
+    const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.15, 4, 4), mat);
     mesh.position.copy(pos);
     scene.add(mesh);
-    particles.push({ mesh, mat, vx: Math.cos(angle)*spd, vz: Math.sin(angle)*spd, age: 0, life: 0.4 });
+    particles.push({ mesh, mat, vx: Math.cos(a)*spd, vz: Math.sin(a)*spd, age: 0, life: 0.4 });
   }
 }
 
 // ─────────────────────────────────────────────
-// FORMATION SPLIT (THE MOMENT)
+// FORMATION SPLIT — THE MOMENT
 // ─────────────────────────────────────────────
 function triggerFormationSplit() {
   const ghost = ships.find(s => s.isGhost);
   if (!ghost) return;
-
   ghost.shimmerTimer = 0.7;
   ghostPacerSplitActive = true;
   ghostPacerSplitTimer = 8.0;
   spawnSplitParticles(ghost.mesh.position.clone());
   sfx_formationSplit();
 
-  // 5 copies diverging at ±24°, ±12°, 0°
-  const angles = [24, 12, 0, -12, -24].map(a => a * Math.PI / 180);
-  ghostCopies = angles.map((angle, i) => {
-    const copy = spawnShip(ghost.t, ghost.lateral + Math.sin(angle) * 8, true);
-    copy.isCopy = true;
-    copy.splitAngle = angle;
+  ghostCopies = [24, 12, 0, -12, -24].map(angleDeg => {
+    const copy = spawnShip(0, ghost.baseLateral, ghost.ampX + Math.sin(angleDeg * Math.PI/180) * 3, ghost.freqX, ghost.phase + angleDeg * 0.1, true);
+    copy.z = ghost.z; copy.x = ghost.x;
+    copy.isCopy = true; copy.splitAngle = angleDeg * Math.PI / 180;
     ships.push(copy);
     return copy;
   });
@@ -862,27 +535,106 @@ function triggerFormationSplit() {
 // DISSOLVE
 // ─────────────────────────────────────────────
 function startDissolve() {
-  player.dissolved = true;
-  playerMesh.visible = false;
+  player.dissolved = true; playerMesh.visible = false;
   for (let i = 0; i < 40; i++) {
-    const geo = new THREE.TetrahedronGeometry(0.15 + Math.random() * 0.3);
     const mat = new THREE.MeshBasicMaterial({ color: COL_GOLD, transparent: true, opacity: 1 });
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.copy(player.worldPos);
+    const mesh = new THREE.Mesh(new THREE.TetrahedronGeometry(0.15 + Math.random() * 0.3), mat);
+    mesh.position.set(player.x, 0, player.z);
     scene.add(mesh);
     const a = Math.random() * Math.PI * 2;
     const spd = 2 + Math.random() * 5;
-    dissolveParts.push({ mesh, mat, vx: Math.cos(a)*spd, vy: (Math.random()-0.5)*spd, vz: Math.sin(a)*spd, age:0, life:0.6+Math.random()*0.3 });
+    dissolveParts.push({ mesh, mat, vx: Math.cos(a)*spd, vy: (Math.random()-0.5)*spd, vz: Math.sin(a)*spd, age: 0, life: 0.6 + Math.random()*0.3 });
   }
 }
 
 // ─────────────────────────────────────────────
-// INPUT
+// AUDIO
 // ─────────────────────────────────────────────
-document.addEventListener('pointermove', e => {
-  const rect = canvas.getBoundingClientRect();
-  cursorNorm = (e.clientX - rect.left) / rect.width;
-});
+let audioReady = false, musicInDraft = false;
+let bassFilter, bassGain, bass, bassHigh, bassHighGain;
+let padGain, pad, hihatGain, hihat, kick;
+let sfxDraftEnter, sfxBreakM, sfxBreakS, sfxBleed, sfxBleedActive = false;
+let sfxChain, sfxWall;
+
+function initAudio() {
+  if (audioReady) return; audioReady = true;
+  try {
+    Tone.start();
+    Tone.getTransport().bpm.value = 138;
+
+    bassFilter = new Tone.Filter(400,'lowpass');
+    bassGain = new Tone.Volume(-6);
+    bass = new Tone.Synth({oscillator:{type:'sawtooth'},envelope:{attack:0.01,decay:0.1,sustain:0.9,release:0.1}});
+    bass.connect(bassFilter); bassFilter.connect(bassGain); bassGain.toDestination();
+
+    bassHigh = new Tone.Synth({oscillator:{type:'sawtooth'},envelope:{attack:0.05,decay:0.1,sustain:0.9,release:0.1}});
+    bassHighGain = new Tone.Volume(-12);
+    bassHigh.connect(new Tone.Filter(5000,'lowpass')).connect(bassHighGain).toDestination();
+    bassHighGain.mute = true;
+
+    padGain = new Tone.Volume(-8);
+    pad = new Tone.PolySynth(Tone.Synth,{oscillator:{type:'sine'},envelope:{attack:0.8,decay:0.5,sustain:0.8,release:2.0}});
+    pad.connect(padGain).toDestination();
+
+    hihatGain = new Tone.Volume(-16);
+    hihat = new Tone.MetalSynth({frequency:400,envelope:{attack:0.001,decay:0.05,release:0.01},harmonicity:5.1,modulationIndex:32,resonance:4000,octaves:1.5});
+    hihat.connect(hihatGain).toDestination();
+
+    kick = new Tone.MembraneSynth({pitchDecay:0.07,octaves:5,envelope:{attack:0.001,decay:0.3,sustain:0,release:0.1}}).toDestination();
+
+    const bNotes = ['F1','F1','Eb1','F1','F1','Ab1','Eb1','F1'];
+    let bn = 0;
+    new Tone.Loop(t => {
+      const n = bNotes[bn++ % bNotes.length];
+      bass.triggerAttackRelease(n,'8n',t);
+      if (!bassHighGain.mute) bassHigh.triggerAttackRelease(n.replace(/(\d)/,x=>String(+x+1)),'8n',t);
+    },'8n').start(0);
+    new Tone.Loop(t => hihat.triggerAttackRelease('16n',t),'16n').start(0);
+    let kn=0;
+    new Tone.Loop(t=>{if(kn++%2===0)kick.triggerAttackRelease('C1','8n',t);},'4n').start(0);
+    new Tone.Loop(t=>pad.triggerAttackRelease(['F3','Ab3','C4'],'2n',t),'1m').start(0);
+    Tone.getTransport().start();
+
+    sfxDraftEnter = new Tone.Synth({oscillator:{type:'sine'},envelope:{attack:0.05,decay:0.15,sustain:0.6,release:0.2}}).toDestination();
+    sfxDraftEnter.volume.value = -8;
+    sfxBreakM = new Tone.MembraneSynth({pitchDecay:0.04,octaves:4,envelope:{attack:0.001,decay:0.15,sustain:0,release:0.1}}).toDestination();
+    sfxBreakM.volume.value = -4;
+    sfxBreakS = new Tone.Synth({oscillator:{type:'sine'},envelope:{attack:0.01,decay:0.25,sustain:0.3,release:0.3}}).toDestination();
+    sfxBreakS.volume.value = -4;
+    sfxBleed = new Tone.Synth({oscillator:{type:'sine'},envelope:{attack:0.1,decay:0.5,sustain:0.8,release:0.3}}).toDestination();
+    sfxBleed.frequency.value=60; sfxBleed.volume.value=-20;
+    new Tone.LFO({frequency:1.4,type:'sine',min:-34,max:-20}).connect(sfxBleed.volume).start();
+    sfxChain = new Tone.Synth({oscillator:{type:'triangle'},envelope:{attack:0.01,decay:0.3,sustain:0,release:0.1}}).toDestination();
+    sfxChain.volume.value = -10;
+    sfxWall = new Tone.MetalSynth({frequency:40,envelope:{attack:0.001,decay:0.4,release:0.2},harmonicity:3.1,modulationIndex:12,resonance:3200,octaves:1.2}).toDestination();
+    sfxWall.volume.value = -2;
+  } catch(e) {}
+}
+
+function setMusicDraft(v) {
+  if (!audioReady || musicInDraft === v) return; musicInDraft = v;
+  try {
+    if (v) { bassFilter.frequency.rampTo(2800,0.8); bassHighGain.mute=false; padGain.volume.rampTo(-2,0.8); hihatGain.volume.rampTo(-10,0.8); }
+    else { bassFilter.frequency.rampTo(400,0.3); bassHighGain.mute=true; padGain.volume.rampTo(-8,0.8); hihatGain.volume.rampTo(-16,0.8); }
+  } catch(e) {}
+}
+
+function sfx_draftEnter() { if (!audioReady||!sfxDraftEnter) return; try { sfxDraftEnter.triggerAttackRelease(180,0.4); sfxDraftEnter.frequency.rampTo(340,0.4); } catch(e){} }
+function sfx_draftBreak() { if (!audioReady) return; try { sfxBreakM.triggerAttackRelease(200,0.05); setTimeout(()=>{try{sfxBreakS.triggerAttackRelease(280,0.45);sfxBreakS.frequency.rampTo(90,0.45);}catch(e){}},60); } catch(e){} }
+function sfx_chainLock() { if (!audioReady||!sfxChain) return; try { sfxChain.triggerAttackRelease(880,0.3); setTimeout(()=>{try{sfxChain.triggerAttackRelease(1320,0.3);}catch(e){}},150); } catch(e){} }
+function sfx_wallHit() { if (!audioReady||!sfxWall) return; try { sfxWall.triggerAttackRelease('40n'); } catch(e){} }
+function sfx_formationSplit() {
+  if (!audioReady) return;
+  try {
+    [180,210,220,245,270].forEach((freq,i) => {
+      const pan = new Tone.Panner([-1,-0.5,0,0.5,1][i]).toDestination();
+      const s = new Tone.Synth({oscillator:{type:'sine'},envelope:{attack:0.05,decay:1.2,sustain:0.5,release:1.2}}).connect(pan);
+      s.volume.value=-12; s.triggerAttackRelease(220,2.0); s.frequency.rampTo(freq,1.5);
+      setTimeout(()=>{try{s.dispose();pan.dispose();}catch(e){}},4000);
+    });
+    if (padGain) { setTimeout(()=>{try{padGain.volume.rampTo(-40,0.1);}catch(e){}},300); setTimeout(()=>{try{padGain.volume.rampTo(-8,0.5);}catch(e){}},700); }
+  } catch(e) {}
+}
 
 // ─────────────────────────────────────────────
 // HUD
@@ -892,398 +644,312 @@ function drawHUD() {
   hud.clearRect(0, 0, w, h);
   if (gameState !== 'playing') return;
 
-  const lv = LEVELS[currentLevel];
-  const floorSpeedNow = Math.min(160, FLOOR_SPEED + player.chainCount * 20);
+  const floorNow = Math.min(16, FLOOR_SPEED + player.chainCount * 2);
   const speedFrac = Math.max(0, Math.min(1, (player.speed - FLOOR_SPEED) / (MAX_SPEED - FLOOR_SPEED)));
-  const floorFrac = (floorSpeedNow - FLOOR_SPEED) / (MAX_SPEED - FLOOR_SPEED);
+  const floorFrac = (floorNow - FLOOR_SPEED) / (MAX_SPEED - FLOOR_SPEED);
 
-  // Speed bar (left)
-  const bx = 28, by = h * 0.18, bh = h * 0.62, bw = 16;
-  hud.fillStyle = 'rgba(10,20,50,0.55)';
-  hud.fillRect(bx-2, by-2, bw+4, bh+4);
+  // Speed bar
+  const bx=28, by=h*0.18, bh=h*0.62, bw=16;
+  hud.fillStyle='rgba(10,20,50,0.55)'; hud.fillRect(bx-2,by-2,bw+4,bh+4);
   const fillH = bh * speedFrac;
-  hud.fillStyle = player.speed < floorSpeedNow + 25 ? '#FF4D1C' : '#E8C84A';
-  hud.fillRect(bx, by + bh - fillH, bw, fillH);
-  // Floor line
-  const floorY = by + bh * (1 - floorFrac);
-  hud.strokeStyle = '#FF4D1C'; hud.lineWidth = 2;
-  hud.beginPath(); hud.moveTo(bx-4, floorY); hud.lineTo(bx+bw+4, floorY); hud.stroke();
-  // Speed number
-  hud.fillStyle = '#E8C84A';
-  hud.font = `bold ${Math.round(h * 0.022)}px 'Courier New',monospace`;
-  hud.textAlign = 'left';
-  hud.fillText(Math.round(player.speed), bx, by + bh + 22);
+  hud.fillStyle = player.speed < floorNow + 2.5 ? '#FF4D1C' : '#E8C84A';
+  hud.fillRect(bx, by+bh-fillH, bw, fillH);
+  const floorY = by + bh*(1-floorFrac);
+  hud.strokeStyle='#FF4D1C'; hud.lineWidth=2;
+  hud.beginPath(); hud.moveTo(bx-4,floorY); hud.lineTo(bx+bw+4,floorY); hud.stroke();
+  hud.fillStyle='#E8C84A'; hud.font=`bold ${Math.round(h*0.022)}px 'Courier New',monospace`;
+  hud.textAlign='left'; hud.fillText(Math.round(player.speed*10),bx,by+bh+22); // ×10 for display
 
-  // Chain (upper left)
-  hud.font = `bold ${Math.round(h * 0.048)}px 'Courier New',monospace`;
-  hud.fillStyle = '#E8C84A';
-  hud.fillText(`×${player.chainCount}`, 54, 52);
-  hud.font = `${Math.round(h*0.017)}px 'Courier New',monospace`;
-  hud.fillStyle = 'rgba(168,228,255,0.7)';
-  hud.fillText('CHAIN', 54, 70);
+  // Chain
+  hud.font=`bold ${Math.round(h*0.048)}px 'Courier New',monospace`; hud.fillStyle='#E8C84A';
+  hud.fillText(`×${player.chainCount}`,54,52);
+  hud.font=`${Math.round(h*0.017)}px 'Courier New',monospace`; hud.fillStyle='rgba(168,228,255,0.7)';
+  hud.fillText('CHAIN',54,70);
 
-  // Lap counter (upper center)
-  const lapDisp = `LAP ${player.lap + 1} / ${LAPS_TO_WIN}`;
-  hud.font = `bold ${Math.round(h * 0.028)}px 'Courier New',monospace`;
-  hud.textAlign = 'center';
+  // Lap counter
+  const lapFrac = Math.min(1, player.lapDist / LAP_DISTANCE);
+  const lapStr = `LAP ${Math.min(player.lap + 1, LAPS_TO_WIN)} / ${LAPS_TO_WIN}`;
+  hud.font=`bold ${Math.round(h*0.028)}px 'Courier New',monospace`; hud.textAlign='center';
   hud.fillStyle = lapCompleteFlash > 0 ? `rgba(232,200,74,${lapCompleteFlash})` : '#A8E4FF';
-  hud.fillText(lapDisp, w/2, 42);
+  hud.fillText(lapStr, w/2, 42);
 
-  // Draft / danger indicator
+  // Lap progress bar (thin line under lap counter)
+  const pbx = w/2 - 60, pby = 52, pbw = 120, pbh = 3;
+  hud.fillStyle = 'rgba(168,228,255,0.2)'; hud.fillRect(pbx,pby,pbw,pbh);
+  hud.fillStyle = '#A8E4FF'; hud.fillRect(pbx,pby,pbw*lapFrac,pbh);
+
+  // Status
   if (player.isDrafting) {
-    hud.font = `${Math.round(h*0.02)}px 'Courier New',monospace`;
-    hud.fillStyle = '#A8E4FF';
-    hud.textAlign = 'center';
+    hud.font=`${Math.round(h*0.02)}px 'Courier New',monospace`; hud.fillStyle='#A8E4FF'; hud.textAlign='center';
     hud.fillText('◈ DRAFTING', w/2, h-22);
-  } else if (player.speed < floorSpeedNow + 30) {
-    const pulse = 0.5 + 0.5 * Math.sin(Date.now() * 0.008);
-    hud.font = `bold ${Math.round(h*0.022)}px 'Courier New',monospace`;
-    hud.fillStyle = `rgba(255,77,28,${pulse})`;
-    hud.textAlign = 'center';
+  } else if (player.speed < floorNow + 3) {
+    const pulse = 0.5+0.5*Math.sin(Date.now()*0.008);
+    hud.font=`bold ${Math.round(h*0.022)}px 'Courier New',monospace`;
+    hud.fillStyle=`rgba(255,77,28,${pulse})`; hud.textAlign='center';
     hud.fillText('⚠ FIND DRAFT', w/2, h-22);
   }
 
-  // Wall flash border
+  // Wall flash
   if (wallFlash.active) {
-    const a = wallFlash.timer / 0.4;
-    hud.strokeStyle = `rgba(255,77,28,${a*0.7})`; hud.lineWidth = 10;
-    hud.strokeRect(0, 0, w, h);
+    hud.strokeStyle=`rgba(255,77,28,${wallFlash.timer/0.4*0.7})`; hud.lineWidth=10;
+    hud.strokeRect(0,0,w,h);
   }
-
-  // Lap flash
-  if (lapCompleteFlash > 0) {
-    hud.fillStyle = `rgba(232,200,74,${lapCompleteFlash * 0.18})`;
-    hud.fillRect(0, 0, w, h);
-    lapCompleteFlash = Math.max(0, lapCompleteFlash - 0.025);
-  }
+  if (lapCompleteFlash>0) { hud.fillStyle=`rgba(232,200,74,${lapCompleteFlash*0.18})`; hud.fillRect(0,0,w,h); lapCompleteFlash=Math.max(0,lapCompleteFlash-0.025); }
 }
 
 // ─────────────────────────────────────────────
-// START SCREEN ANIMATION
+// START SCREEN 3D
 // ─────────────────────────────────────────────
-let lockRingTimer4s = 0, lockRingPhase = 0, lockRingShowing = false;
+let lockRingTimer4s=0, lockRingPhase=0, lockRingShowing=false;
 
 function buildStartScreen3D() {
-  startShips.forEach(s => { scene.remove(s.mesh); if (s.wakeLine) scene.remove(s.wakeLine); });
+  startShips.forEach(s => { scene.remove(s.mesh); if (s.wakeLine) scene.remove(s.wakeLine); if (s.lr) scene.remove(s.lr); });
   startShips = [];
   for (let i = 0; i < 3; i++) {
-    const mesh = buildShipMesh();
-    scene.add(mesh);
-    const lr = buildLockRing();
-    scene.add(lr);
-    startShips.push({ mesh, lr, t: i/3, wakePoints:[], trailTimer:0, heading:new THREE.Vector3(0,0,1), lockRingOpacity:0 });
+    const mesh = buildShipMesh(), lr = buildLockRing();
+    scene.add(mesh); scene.add(lr);
+    startShips.push({ mesh, lr, t:i/3, wakePoints:[], trailTimer:0, heading:new THREE.Vector3(0,0,1), lockRingOpacity:0 });
   }
-  // Position player wedge
-  player.worldPos.set(0, 0, 0);
-  playerMesh.position.set(0, 0, -12);
-  playerMesh.rotation.y = 0;
+  player.x = 0; player.z = 0;
+  playerMesh.position.set(0, 0, -10); playerMesh.rotation.y = 0;
 }
 
 function updateStartScreen(dt) {
   const t = Date.now() * 0.001;
-
-  // Orbit 3 ships in triangle
   startShips.forEach((s, i) => {
     const a = t * 0.35 + i * Math.PI * 2 / 3;
-    const px = Math.cos(a) * 9;
-    const pz = Math.sin(a) * 9 + 3;
+    const nx = Math.cos(a) * 9, nz = Math.sin(a) * 9 + 3;
     const prev = s.mesh.position.clone();
-    s.mesh.position.set(px, 0, pz);
+    s.mesh.position.set(nx, 0, nz);
     const dv = new THREE.Vector3().subVectors(s.mesh.position, prev);
-    if (dv.length() > 0.001) { s.heading.copy(dv.normalize()); }
+    if (dv.length()>0.001) s.heading.copy(dv.normalize());
     s.mesh.rotation.y = Math.atan2(s.heading.x, s.heading.z);
 
-    updateAndRenderTrail(s, dt);
+    // Simple wake trail for start screen
+    s.trailTimer = (s.trailTimer||0) + dt;
+    if (s.trailTimer>0.06) { s.trailTimer=0; s.wakePoints.push({x:nx,z:nz,heading:s.heading.clone(),age:0}); }
+    for (const p of s.wakePoints) p.age+=dt;
+    s.wakePoints = s.wakePoints.filter(p=>p.age<1.5);
+    updateAndRenderTrail(s, 0); // render without adding new point
 
-    // Lock ring on target ship (index 0) every 4s
-    if (lockRingShowing && i === 0) {
-      s.lockRingOpacity = THREE.MathUtils.lerp(s.lockRingOpacity, lockRingPhase, 0.2);
-    } else {
-      s.lockRingOpacity = THREE.MathUtils.lerp(s.lockRingOpacity, 0, 0.1);
-    }
-    s.lr.position.copy(s.mesh.position);
-    s.lr.position.y = 0.3;
-    s.lr.material.opacity = s.lockRingOpacity;
-    s.lr.rotation.y += 0.785 * dt;
+    // Lock ring
+    const tgt = (lockRingShowing && i===0) ? lockRingPhase : 0;
+    s.lockRingOpacity = THREE.MathUtils.lerp(s.lockRingOpacity||0, tgt, 0.15);
+    s.lr.position.copy(s.mesh.position); s.lr.position.y=0.3;
+    s.lr.material.opacity = s.lockRingOpacity; s.lr.rotation.y += 0.785*dt;
   });
 
-  // Lock ring cycle
   lockRingTimer4s += dt;
-  if (lockRingTimer4s > 4.0 && !lockRingShowing) { lockRingShowing = true; lockRingTimer4s = 0; }
+  if (lockRingTimer4s>4 && !lockRingShowing) { lockRingShowing=true; lockRingTimer4s=0; }
   if (lockRingShowing) {
-    const ph = lockRingTimer4s;
-    if (ph < 0.3) lockRingPhase = ph / 0.3;
-    else if (ph < 0.8) lockRingPhase = 1;
-    else if (ph < 1.1) lockRingPhase = 1 - (ph - 0.8) / 0.3;
-    else { lockRingPhase = 0; lockRingShowing = false; }
+    const ph=lockRingTimer4s;
+    if (ph<0.3) lockRingPhase=ph/0.3;
+    else if (ph<0.8) lockRingPhase=1;
+    else if (ph<1.1) lockRingPhase=1-(ph-0.8)/0.3;
+    else { lockRingPhase=0; lockRingShowing=false; }
   }
 
-  // Player corona pulse
   const corona = playerMesh.getObjectByName('corona');
-  if (corona) corona.material.opacity = 0.3 + 0.4 * (0.5 + 0.5 * Math.sin(t * Math.PI * 4));
-
-  // Blink click-to-begin
+  if (corona) corona.material.opacity = 0.3+0.4*(0.5+0.5*Math.sin(t*Math.PI*4));
   const ctb = document.getElementById('click-to-begin');
-  if (ctb) ctb.style.opacity = Math.sin(t * Math.PI / 0.7) > 0 ? '1' : '0.2';
+  if (ctb) ctb.style.opacity = Math.sin(t*Math.PI/0.7)>0 ? '1' : '0.2';
 
-  // Camera
-  camera.position.set(
-    Math.sin(t*0.2) * 2,
-    8 + Math.sin(t*0.4) * 0.3,
-    -22 + Math.sin(t*0.3)*1
-  );
+  camera.position.set(Math.sin(t*0.2)*2, 8+Math.sin(t*0.4)*0.3, -22+Math.sin(t*0.3)*1);
   camera.lookAt(0, 0, 3);
 }
 
 // ─────────────────────────────────────────────
 // MAIN UPDATE
 // ─────────────────────────────────────────────
-let lastTime = null;
-
 function update(dt) {
   if (player.dissolved) {
-    // Just update dissolve
-    dissolveParts.forEach(p => {
-      p.age += dt; p.mesh.position.x += p.vx*dt; p.mesh.position.y += p.vy*dt;
-      p.mesh.position.z += p.vz*dt; p.mat.opacity = Math.max(0, 1 - p.age/p.life);
-      p.mesh.rotation.x += dt*3; p.mesh.rotation.z += dt*2;
-    });
-    dissolveParts = dissolveParts.filter(p => p.age < p.life);
-    // Update camera to stay fixed
-    updateCamera();
-    return;
+    dissolveParts.forEach(p => { p.age+=dt; p.mesh.position.x+=p.vx*dt; p.mesh.position.y+=p.vy*dt; p.mesh.position.z+=p.vz*dt; p.mat.opacity=Math.max(0,1-p.age/p.life); p.mesh.rotation.x+=dt*3; });
+    dissolveParts = dissolveParts.filter(p=>p.age<p.life);
+    updateCamera(); return;
   }
 
   const lv = LEVELS[currentLevel];
-  const floorSpeedNow = Math.min(160, FLOOR_SPEED + player.chainCount * 20);
+  const floorNow = Math.min(16, FLOOR_SPEED + player.chainCount * 2);
 
   // ── LATERAL STEERING ──
-  const targetLateral = (cursorNorm * 2 - 1) * TRACK_LATERAL_MAX * 0.9;
-  player.lateral = THREE.MathUtils.lerp(player.lateral, targetLateral * 0.6, 0.12);
+  const targetLat = (cursorNorm * 2 - 1) * 18;
+  player.x = THREE.MathUtils.lerp(player.x, targetLat * 0.6, 0.12);
 
-  // Clamp to track width
-  if (Math.abs(player.lateral) > TRACK_LATERAL_MAX) {
-    player.lateral = Math.sign(player.lateral) * TRACK_LATERAL_MAX;
-    // Wall hit
-    player.speed = Math.max(floorSpeedNow, player.speed * 0.55);
+  if (Math.abs(player.x) > 18) {
+    player.x = Math.sign(player.x) * 18;
+    player.speed = Math.max(floorNow, player.speed * 0.55);
     player.chainCount = 0;
-    wallFlash.active = true;
-    wallFlash.timer = 0.4;
+    wallFlash.active = true; wallFlash.timer = 0.4;
     wallFlashMesh.material.opacity = 0.6;
     sfx_wallHit();
   }
-
   if (wallFlash.active) {
     wallFlash.timer -= dt;
-    wallFlashMesh.material.opacity = Math.max(0, wallFlash.timer / 0.4 * 0.6);
-    if (wallFlash.timer <= 0) { wallFlash.active = false; wallFlashMesh.material.opacity = 0; }
+    wallFlashMesh.material.opacity = Math.max(0, wallFlash.timer/0.4*0.6);
+    if (wallFlash.timer<=0) { wallFlash.active=false; wallFlashMesh.material.opacity=0; }
   }
 
-  // ── FIND BEST DRAFT ──
-  let bestDraft = 0, bestDraftShip = null;
+  // ── DRAFT CHECK ──
+  let bestDraft=0, bestDraftShip=null;
   for (const s of ships) {
     if (s.isCopy && !ghostPacerSplitActive) continue;
-    const ds = computeDraftStrength(s);
-    if (ds > bestDraft) { bestDraft = ds; bestDraftShip = s; }
+    const ds = computeDraft(s);
+    if (ds > bestDraft) { bestDraft=ds; bestDraftShip=s; }
   }
-
   player.draftStrength = THREE.MathUtils.lerp(player.draftStrength, bestDraft, 0.15);
   const wasInDraft = player.isDrafting;
   player.isDrafting = player.draftStrength > 0.12;
 
-  // Draft transitions
   if (!wasInDraft && player.isDrafting && bestDraftShip) {
     const chaining = player.chainTimer > 0 && player.chainTimer < CHAIN_GAP;
-    if (chaining && player.lastDraftShipId !== bestDraftShip.id) {
-      player.chainCount++;
-      if (player.chainCount > player.bestChain) player.bestChain = player.chainCount;
-      sfx_chainLock();
-    } else if (!chaining) {
-      player.chainCount = 0;
-    }
+    if (chaining && player.lastDraftShipId !== bestDraftShip.id) { player.chainCount++; if (player.chainCount>player.bestChain) player.bestChain=player.chainCount; sfx_chainLock(); }
+    else if (!chaining) player.chainCount = 0;
     player.lastDraftShipId = bestDraftShip.id;
     player.chainTimer = 0;
-    sfx_draftEnter();
-    setMusicDraft(true);
+    sfx_draftEnter(); setMusicDraft(true);
   } else if (wasInDraft && !player.isDrafting) {
-    player.chainTimer = 0;
-    sfx_draftBreak();
-    setMusicDraft(false);
+    player.chainTimer = 0; sfx_draftBreak(); setMusicDraft(false);
   }
   if (!player.isDrafting) {
     player.chainTimer += dt;
     if (player.chainTimer > CHAIN_GAP) player.chainCount = 0;
   }
 
-  // ── SPEED MODEL ──
+  // ── SPEED ──
   if (player.isDrafting) {
-    const targetSpd = player.draftStrength >= 0.8 ? DRAFT_SPEED
-      : THREE.MathUtils.lerp(BASE_SPEED, DRAFT_SPEED, player.draftStrength);
-    player.speed = THREE.MathUtils.lerp(player.speed, targetSpd, 0.04);
+    const tgt = player.draftStrength>=0.8 ? DRAFT_SPEED : THREE.MathUtils.lerp(BASE_SPEED, DRAFT_SPEED, player.draftStrength);
+    player.speed = THREE.MathUtils.lerp(player.speed, tgt, 0.04);
     player.draftTimer += dt;
-    if (player.draftTimer > 2.0) {
-      const sling = Math.min(1, (player.draftTimer - 2.0) / 2.0);
-      player.speed = Math.max(player.speed, THREE.MathUtils.lerp(DRAFT_SPEED, MAX_SPEED, sling));
-    }
+    if (player.draftTimer>2.0) player.speed = Math.max(player.speed, THREE.MathUtils.lerp(DRAFT_SPEED, MAX_SPEED, Math.min(1,(player.draftTimer-2)/2)));
   } else {
     player.draftTimer = 0;
-    const bleedF = player.speed / MAX_SPEED;
-    player.speed -= lv.bleedRate * bleedF * bleedF * dt;
-    player.speed = Math.max(floorSpeedNow - 5, player.speed);
+    const bf = player.speed / MAX_SPEED;
+    player.speed -= lv.bleedRate * bf * bf * dt;
+    player.speed = Math.max(floorNow-0.5, player.speed);
   }
 
-  // Speed floor check
-  if (player.speed <= floorSpeedNow && !player.dissolved) {
+  if (player.speed <= floorNow && !player.dissolved) {
     player.floorTimer += dt;
-    if (player.floorTimer > SPEED_FLOOR_GRACE) {
-      startDissolve();
-      setTimeout(() => endGame(false), 700);
-    }
-  } else {
-    player.floorTimer = Math.max(0, player.floorTimer - dt * 2);
-  }
+    if (player.floorTimer > SPEED_FLOOR_GRACE) { startDissolve(); setTimeout(()=>endGame(false),700); }
+  } else player.floorTimer = Math.max(0, player.floorTimer - dt*2);
   if (player.speed > player.bestSpeed) player.bestSpeed = player.speed;
 
-  // ── TRACK PROGRESSION ──
-  player.prevT = player.t;
-  const dtTrack = speedToTrackDt(player.speed, dt);
-  player.t += dtTrack;
+  // ── FORWARD MOVEMENT ──
+  const prevZ = player.z;
+  player.z += player.speed * dt;
+  const distThisFrame = player.z - prevZ;
 
-  // Lap detection: t crosses 1.0
-  if (player.t >= 1.0) {
-    player.t -= 1.0;
+  player.lapDist += distThisFrame;
+  if (player.lapDist >= LAP_DISTANCE) {
+    player.lapDist -= LAP_DISTANCE;
     player.lap++;
     lapCompleteFlash = 1.0;
-
     if (player.lap >= LAPS_TO_WIN) {
-      setTimeout(() => endGame(true), 80);
-    } else if (currentLevel === 2 && player.lap === 2 && !formationSplitFired) {
-      formationSplitFired = true;
-      triggerFormationSplit();
+      setTimeout(()=>endGame(true), 80);
+    } else if (currentLevel===2 && player.lap===2 && !formationSplitFired) {
+      formationSplitFired = true; triggerFormationSplit();
     }
   }
 
-  // ── WORLD POSITION ──
-  player.worldPos.copy(trackWorldPos(player.t, player.lateral));
-  playerMesh.position.copy(player.worldPos);
-  playerMesh.position.y = 0;
-
-  // Orient player to track heading
-  const heading = trackTangent(player.t);
-  playerMesh.rotation.y = Math.atan2(heading.x, heading.z);
+  // ── PLAYER MESH ──
+  playerMesh.position.set(player.x, 0, player.z);
+  playerMesh.rotation.y = 0; // always facing forward
 
   // Corona
-  const targetOp = player.isDrafting ? (0.5 + 0.5 * Math.sin(Date.now() * 0.002 * Math.PI * 4)) : 0;
+  const tOp = player.isDrafting ? (0.5+0.5*Math.sin(Date.now()*0.002*Math.PI*4)) : 0;
   const coronaRate = player.isDrafting ? 1/0.15 : 1/0.3;
-  player.coronaOpacity = THREE.MathUtils.lerp(player.coronaOpacity, targetOp, dt * coronaRate);
+  player.coronaOpacity = THREE.MathUtils.lerp(player.coronaOpacity, tOp, dt*coronaRate);
   const corona = playerMesh.getObjectByName('corona');
   if (corona) corona.material.opacity = Math.max(0, player.coronaOpacity);
 
   // Afterimage
   const spd = player.speed;
-  afterimagePass.uniforms['damp'].value = spd > 220 ? 0.82
-    : spd > 160 ? THREE.MathUtils.lerp(0, 0.82, (spd-160)/60) : 0;
+  afterimagePass.uniforms['damp'].value = spd>22 ? 0.82 : spd>16 ? THREE.MathUtils.lerp(0,0.82,(spd-16)/6) : 0;
 
   // ── SHIPS UPDATE ──
-  ships.forEach((s, si) => {
-    if (s.isCopy && !ghostPacerSplitActive) { s.mesh.visible = false; return; }
+  ships.forEach(s => {
+    if (s.isCopy && !ghostPacerSplitActive) { s.mesh.visible=false; return; }
     s.mesh.visible = true;
 
-    const prevPos = s.mesh.position.clone();
-    const shipDtTrack = speedToTrackDt(lv.shipSpeed, dt);
-    s.t = (s.t + shipDtTrack) % 1.0;
+    const prevSX = s.x;
+    s.z += lv.shipSpeed * dt;
 
-    // Position
-    const worldP = trackWorldPos(s.t, s.lateral);
-    s.mesh.position.copy(worldP);
-    s.mesh.position.y = 0;
-
-    // Ghost copies diverge laterally
-    if (s.isCopy && ghostPacerSplitActive) {
-      const progress = Math.min(1, (8 - ghostPacerSplitTimer) / 8);
-      const diverge = progress * Math.sin(s.splitAngle) * 12;
-      const wp2 = trackWorldPos(s.t, s.lateral + diverge);
-      s.mesh.position.copy(wp2);
+    // If ship gets too far ahead (>LAP_DISTANCE ahead), loop it back
+    if (s.z - player.z > LAP_DISTANCE * 0.95) {
+      s.z -= LAP_DISTANCE;
     }
 
-    // Heading
-    const dv = new THREE.Vector3().subVectors(s.mesh.position, prevPos);
-    if (dv.length() > 0.001) s.heading.copy(dv.normalize());
-    s.mesh.rotation.y = Math.atan2(s.heading.x, s.heading.z);
+    // Compute X from sinusoidal path
+    if (s.isCopy && ghostPacerSplitActive) {
+      const progress = Math.min(1, (8-ghostPacerSplitTimer)/8);
+      s.x = s.baseLateral + s.ampX * Math.sin(s.freqX * s.z + s.phase) + progress * Math.sin(s.splitAngle) * 10;
+    } else {
+      s.x = s.baseLateral + s.ampX * Math.sin(s.freqX * s.z + s.phase);
+    }
+
+    s.mesh.position.set(s.x, 0, s.z);
+
+    // Heading: combine forward + lateral drift
+    const lateralV = s.x - prevSX;
+    const fwdSpd = lv.shipSpeed * dt;
+    const hx = lateralV / (Math.sqrt(lateralV*lateralV + fwdSpd*fwdSpd) + 0.0001);
+    const hz = fwdSpd / (Math.sqrt(lateralV*lateralV + fwdSpd*fwdSpd) + 0.0001);
+    s.heading.set(hx, 0, hz).normalize();
+    s.mesh.rotation.y = Math.atan2(hx, hz);
 
     updateAndRenderTrail(s, dt);
 
     // Lock ring
-    const inApproach = isInApproachRadius(s);
-    s.lockRingOpacity = THREE.MathUtils.lerp(s.lockRingOpacity || 0, inApproach ? 0.85 : 0, 0.1);
-    s.lockRing.position.copy(s.mesh.position);
-    s.lockRing.position.y = 0.25;
+    const app = inApproach(s);
+    s.lockRingOpacity = THREE.MathUtils.lerp(s.lockRingOpacity||0, app?0.85:0, 0.1);
+    s.lockRing.position.set(s.x, 0.2, s.z);
     s.lockRing.material.opacity = s.lockRingOpacity;
-    s.lockRing.rotation.y += 0.785 * dt;
+    s.lockRing.rotation.y += 0.785*dt;
 
     // Ghost shimmer
-    if (s.isGhost && s.shimmerTimer > 0) {
+    if (s.isGhost && s.shimmerTimer>0) {
       s.shimmerTimer -= dt;
-      const flicker = Math.sin(Date.now() * 0.012 * Math.PI * 12) > 0;
-      s.mesh.children.forEach(c => {
-        if (c.material && c.material.color) {
-          c.material.color.setHex(flicker ? 0xffffff : COL_SHIP);
-        }
-      });
+      const flk = Math.sin(Date.now()*0.012*Math.PI*12)>0;
+      s.mesh.children.forEach(c=>{ if(c.material?.color) c.material.color.setHex(flk?0xffffff:COL_SHIP); });
     }
   });
 
-  // Formation split timer
   if (ghostPacerSplitActive) {
     ghostPacerSplitTimer -= dt;
-    if (ghostPacerSplitTimer <= 0) {
-      ghostPacerSplitActive = false;
-      ghostCopies.forEach(c => { c.mesh.visible = false; c.isCopy = false; });
-    }
+    if (ghostPacerSplitTimer<=0) { ghostPacerSplitActive=false; ghostCopies.forEach(c=>{c.mesh.visible=false;c.isCopy=false;}); }
   }
 
   // Particles
-  particles.forEach(p => {
-    p.age += dt;
-    p.mesh.position.x += p.vx * dt;
-    p.mesh.position.z += p.vz * dt;
-    p.mat.opacity = Math.max(0, 1 - p.age / p.life);
-  });
-  particles = particles.filter(p => p.age < p.life);
+  particles.forEach(p=>{p.age+=dt;p.mesh.position.x+=p.vx*dt;p.mesh.position.z+=p.vz*dt;p.mat.opacity=Math.max(0,1-p.age/p.life);});
+  particles = particles.filter(p=>p.age<p.life);
 
   // Dissolve
-  dissolveParts.forEach(p => {
-    p.age += dt; p.mesh.position.x += p.vx*dt; p.mesh.position.y += p.vy*dt;
-    p.mesh.position.z += p.vz*dt; p.mat.opacity = Math.max(0, 1 - p.age/p.life);
-    p.mesh.rotation.x += dt*3; p.mesh.rotation.z += dt*2;
-  });
-  dissolveParts = dissolveParts.filter(p => p.age < p.life);
+  dissolveParts.forEach(p=>{p.age+=dt;p.mesh.position.x+=p.vx*dt;p.mesh.position.y+=p.vy*dt;p.mesh.position.z+=p.vz*dt;p.mat.opacity=Math.max(0,1-p.age/p.life);p.mesh.rotation.x+=dt*3;});
+  dissolveParts=dissolveParts.filter(p=>p.age<p.life);
 
   // Speed bleed SFX
-  if (audioReady && sfxSpeedBleed) {
-    const shouldBleed = !player.isDrafting && player.speed < DRAFT_SPEED && player.speed > floorSpeedNow;
+  if (audioReady && sfxBleed) {
+    const shouldBleed = !player.isDrafting && player.speed<DRAFT_SPEED && player.speed>floorNow;
     try {
-      if (shouldBleed && !sfxSpeedBleedActive) { sfxSpeedBleedActive = true; sfxSpeedBleed.triggerAttack(60); }
-      else if (!shouldBleed && sfxSpeedBleedActive) { sfxSpeedBleedActive = false; sfxSpeedBleed.triggerRelease(); }
+      if (shouldBleed && !sfxBleedActive) { sfxBleedActive=true; sfxBleed.triggerAttack(60); }
+      else if (!shouldBleed && sfxBleedActive) { sfxBleedActive=false; sfxBleed.triggerRelease(); }
     } catch(e) {}
   }
+
+  // Ocean grid follows player Z
+  ocean.position.z = player.z;
+  gridLines.forEach(l => { l.position.z = player.z; });
+  wallFlashMesh.position.set(player.x, -0.3, player.z);
 
   updateCamera();
 }
 
-// Camera update
 function updateCamera() {
-  // Camera follows player: locked to player X, lerped Z
-  const px = player.worldPos.x, py = 0, pz = player.worldPos.z;
-  camera.position.x = px;
-  camera.position.y = py + 3.5;
-  cameraZSmooth = THREE.MathUtils.lerp(cameraZSmooth, pz - 12, 0.33);
+  camera.position.x = player.x;
+  camera.position.y = 3.5;
+  cameraZSmooth = THREE.MathUtils.lerp(cameraZSmooth, player.z - 12, 0.33);
   camera.position.z = cameraZSmooth;
-  camera.lookAt(px, py + 0.8, pz + 4);
-
-  // Position wall flash mesh under camera
-  wallFlashMesh.position.x = px;
-  wallFlashMesh.position.z = pz;
+  camera.lookAt(player.x, 0.8, player.z + 4);
 }
 
 // ─────────────────────────────────────────────
@@ -1294,13 +960,8 @@ function loop(now) {
   if (!lastTime) lastTime = now;
   const dt = Math.min((now - lastTime) / 1000, 0.05);
   lastTime = now;
-
-  if (gameState === 'start') {
-    updateStartScreen(dt);
-  } else if (gameState === 'playing') {
-    update(dt);
-  }
-
+  if (gameState==='start') updateStartScreen(dt);
+  else if (gameState==='playing') update(dt);
   composer.render();
   drawHUD();
 }
@@ -1310,75 +971,46 @@ requestAnimationFrame(loop);
 // SCREEN MANAGEMENT
 // ─────────────────────────────────────────────
 function showScreen(name) {
-  ['startScreen','instrScreen','endScreen'].forEach(id => {
-    document.getElementById(id).classList.add('hidden');
-  });
-  const map = { start:'startScreen', instructions:'instrScreen', results:'endScreen' };
-  if (name) document.getElementById(map[name] || name).classList.remove('hidden');
+  ['startScreen','instrScreen','endScreen'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  const map={start:'startScreen',instructions:'instrScreen',results:'endScreen'};
+  if (name) document.getElementById(map[name]||name).classList.remove('hidden');
 }
 
-function startInstructions() {
-  initAudio();
-  gameState = 'instructions';
-  showScreen('instructions');
-}
-
+function startInstructions() { initAudio(); gameState='instructions'; showScreen('instructions'); }
 function startGame() {
-  gameState = 'playing';
-  showScreen(null);
-  formationSplitFired = false;
-
-  // Clean up start screen
-  startShips.forEach(s => {
-    scene.remove(s.mesh);
-    if (s.wakeLine) scene.remove(s.wakeLine);
-    if (s.lr) scene.remove(s.lr);
-  });
-  startShips = [];
-
+  gameState='playing'; showScreen(null);
+  startShips.forEach(s=>{ scene.remove(s.mesh); if(s.wakeLine) scene.remove(s.wakeLine); if(s.lr) scene.remove(s.lr); });
+  startShips=[];
   setupLevel(currentLevel);
 }
-
 function endGame(won) {
-  gameState = 'results';
-  showScreen('results');
-  document.getElementById('endTitle').textContent = won ? 'CIRCUIT COMPLETE' : 'SIGNAL LOST';
-  document.getElementById('endTitle').style.color = won ? '#E8C84A' : '#FF4D1C';
-  document.getElementById('endStats').innerHTML = `
-    Laps Completed: <span>${player.lap}</span><br>
-    Best Chain: <span>×${player.bestChain}</span><br>
-    Peak Speed: <span>${Math.round(player.bestSpeed)} u/s</span><br>
-    Level: <span>${LEVELS[currentLevel].name}</span>
-  `;
+  gameState='results'; showScreen('results');
+  document.getElementById('endTitle').textContent = won?'CIRCUIT COMPLETE':'SIGNAL LOST';
+  document.getElementById('endTitle').style.color = won?'#E8C84A':'#FF4D1C';
+  document.getElementById('endStats').innerHTML = `Laps Completed: <span>${player.lap}</span><br>Best Chain: <span>×${player.bestChain}</span><br>Peak Speed: <span>${Math.round(player.bestSpeed*10)} u/s</span><br>Level: <span>${LEVELS[currentLevel].name}</span>`;
 }
 
 // ─────────────────────────────────────────────
-// EVENT HANDLERS
+// INPUT + EVENTS
 // ─────────────────────────────────────────────
-document.getElementById('startScreen').addEventListener('pointerdown', () => {
-  if (gameState === 'start') startInstructions();
+document.addEventListener('pointermove', e => {
+  const rect = canvas.getBoundingClientRect();
+  cursorNorm = (e.clientX - rect.left) / rect.width;
 });
-document.getElementById('instr-go').addEventListener('pointerdown', e => {
-  e.stopPropagation();
-  startGame();
-});
-document.getElementById('instrScreen').addEventListener('pointerdown', e => {
-  if (e.target.id === 'instr-go') return;
-  startGame();
-});
-document.getElementById('retry-btn').addEventListener('pointerdown', () => {
-  formationSplitFired = false; ghostPacerSplitActive = false; ghostCopies = [];
-  dissolveParts.forEach(p => scene.remove(p.mesh)); dissolveParts = [];
-  gameState = 'start';
-  buildStartScreen3D();
-  showScreen('start');
+
+document.getElementById('startScreen').addEventListener('pointerdown', ()=>{ if(gameState==='start') startInstructions(); });
+document.getElementById('instr-go').addEventListener('pointerdown', e=>{ e.stopPropagation(); startGame(); });
+document.getElementById('instrScreen').addEventListener('pointerdown', e=>{ if(e.target.id==='instr-go') return; startGame(); });
+document.getElementById('retry-btn').addEventListener('pointerdown', ()=>{
+  formationSplitFired=false; ghostPacerSplitActive=false; ghostCopies=[];
+  dissolveParts.forEach(p=>scene.remove(p.mesh)); dissolveParts=[];
+  gameState='start'; buildStartScreen3D(); showScreen('start');
 });
 
 // ─────────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────────
 buildStartScreen3D();
-
 </script>
 </body>
 </html>
