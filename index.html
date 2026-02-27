@@ -31,13 +31,13 @@ html, body {
   z-index: 10;
   pointer-events: all;
 }
-#start-screen {
+#startScreen {
   background: transparent;
 }
-#instructions-screen {
+#instrScreen {
   background: rgba(10, 20, 50, 0.92);
 }
-#results-screen {
+#endScreen {
   background: rgba(10, 20, 50, 0.92);
 }
 .hidden { display: none !important; }
@@ -129,7 +129,7 @@ html, body {
 <canvas id="hud-canvas"></canvas>
 
 <!-- START SCREEN -->
-<div class="overlay" id="start-screen">
+<div class="overlay" id="startScreen">
   <div id="start-svg-wrap">
     <svg width="520" height="100" viewBox="0 0 520 100" xmlns="http://www.w3.org/2000/svg" style="max-width:90vw;height:auto">
       <defs>
@@ -150,7 +150,7 @@ html, body {
 </div>
 
 <!-- INSTRUCTIONS SCREEN -->
-<div class="overlay hidden" id="instructions-screen">
+<div class="overlay hidden" id="instrScreen">
   <div class="instr-title">HOW TO RIDE</div>
   <div class="instr-body">
     <b>MOVE MOUSE</b> to steer your wedge<br>
@@ -166,9 +166,9 @@ html, body {
 </div>
 
 <!-- RESULTS SCREEN -->
-<div class="overlay hidden" id="results-screen">
-  <div class="results-title" id="results-title">SIGNAL LOST</div>
-  <div class="results-stats" id="results-stats"></div>
+<div class="overlay hidden" id="endScreen">
+  <div class="results-title" id="endTitle">SIGNAL LOST</div>
+  <div class="results-stats" id="endStats"></div>
   <div class="results-retry" id="retry-btn">▶ TRY AGAIN ◀</div>
 </div>
 
@@ -1567,15 +1567,15 @@ requestAnimationFrame(loop);
 // SCREEN MANAGEMENT
 // ──────────────────────────────────────────────────────────
 function showScreen(name) {
-  document.getElementById('start-screen').classList.add('hidden');
-  document.getElementById('instructions-screen').classList.add('hidden');
-  document.getElementById('results-screen').classList.add('hidden');
-  if (name) document.getElementById(name + '-screen').classList.remove('hidden');
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('instrScreen').classList.add('hidden');
+  document.getElementById('endScreen').classList.add('hidden');
+  const screenMap = { 'start': 'startScreen', 'instructions': 'instrScreen', 'results': 'endScreen' };
+  if (name) document.getElementById(screenMap[name] || name).classList.remove('hidden');
 }
 
 function startInstructions() {
   initAudio();
-  buildStartScreen();
   gameState = 'instructions';
   showScreen('instructions');
 }
@@ -1601,8 +1601,8 @@ function endGame(won) {
   gameState = 'results';
   showScreen('results');
 
-  const title = document.getElementById('results-title');
-  const stats = document.getElementById('results-stats');
+  const title = document.getElementById('endTitle');
+  const stats = document.getElementById('endStats');
 
   if (won) {
     title.textContent = 'CIRCUIT COMPLETE';
@@ -1621,7 +1621,7 @@ function endGame(won) {
 }
 
 // ── EVENT HANDLERS ──
-document.getElementById('start-screen').addEventListener('pointerdown', () => {
+document.getElementById('startScreen').addEventListener('pointerdown', () => {
   if (gameState === 'start') startInstructions();
 });
 
@@ -1630,7 +1630,7 @@ document.getElementById('instr-go').addEventListener('pointerdown', e => {
   startGame();
 });
 
-document.getElementById('instructions-screen').addEventListener('pointerdown', e => {
+document.getElementById('instrScreen').addEventListener('pointerdown', e => {
   if (e.target === document.getElementById('instr-go')) return;
   startGame();
 });
