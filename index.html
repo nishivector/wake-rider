@@ -129,7 +129,7 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(COL_BG);
-scene.fog = new THREE.FogExp2(0x1a4a93, 0.025);
+scene.fog = new THREE.FogExp2(0x2558A8, 0.012);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
 
@@ -654,7 +654,7 @@ function drawHUD() {
   const fillH = bh * speedFrac;
   hud.fillStyle = player.speed < floorNow + 2.5 ? '#FF4D1C' : '#E8C84A';
   hud.fillRect(bx, by+bh-fillH, bw, fillH);
-  const floorY = by + bh*(1-floorFrac);
+  const floorY = by + bh * (1 - Math.max(0.04, floorFrac));
   hud.strokeStyle='#FF4D1C'; hud.lineWidth=2;
   hud.beginPath(); hud.moveTo(bx-4,floorY); hud.lineTo(bx+bw+4,floorY); hud.stroke();
   hud.fillStyle='#E8C84A'; hud.font=`bold ${Math.round(h*0.022)}px 'Courier New',monospace`;
