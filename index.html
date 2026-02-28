@@ -61,7 +61,7 @@ html, body { width:100%; height:100%; background:#2E5FA3; overflow:hidden; touch
 <div class="overlay hidden" id="instrScreen">
   <div class="instr-title">HOW TO RIDE</div>
   <div class="instr-body">
-    <b>MOVE MOUSE</b> to steer left and right<br>
+    <b>TOUCH & DRAG</b> to steer left and right<br>
     Get <b>BEHIND</b> an enemy ship to enter its wake<br>
     The <span style="color:#A8E4FF">ice-blue ring</span> shows when you're in range<br><br>
     <b>Complete 3 laps</b> of the circuit<br>
@@ -303,6 +303,7 @@ let ghostCopies = [];
 let lastTime = null;
 let cameraZSmooth = 0;
 let cursorNorm = 0.5;
+let pointerDown = false;
 
 // ─────────────────────────────────────────────
 // SHIP PATROL PATHS
@@ -780,7 +781,7 @@ function update(dt) {
 
   // ── LATERAL STEERING ──
   const targetLat = (cursorNorm * 2 - 1) * 18;
-  player.x = THREE.MathUtils.lerp(player.x, targetLat * 0.6, 0.12);
+  player.x = THREE.MathUtils.lerp(player.x, targetLat, 0.20);
 
   if (Math.abs(player.x) > 18) {
     player.x = Math.sign(player.x) * 18;
@@ -1000,10 +1001,19 @@ function endGame(won) {
 // ─────────────────────────────────────────────
 // INPUT + EVENTS
 // ─────────────────────────────────────────────
-document.addEventListener('pointermove', e => {
+document.addEventListener('pointerdown', e => {
+  if (gameState !== 'playing') return;
+  pointerDown = true;
   const rect = canvas.getBoundingClientRect();
   cursorNorm = (e.clientX - rect.left) / rect.width;
 });
+document.addEventListener('pointermove', e => {
+  if (!pointerDown || gameState !== 'playing') return;
+  const rect = canvas.getBoundingClientRect();
+  cursorNorm = (e.clientX - rect.left) / rect.width;
+});
+document.addEventListener('pointerup', () => { pointerDown = false; });
+document.addEventListener('pointercancel', () => { pointerDown = false; });
 
 document.getElementById('startScreen').addEventListener('pointerdown', ()=>{ if(gameState==='start') startInstructions(); });
 document.getElementById('instr-go').addEventListener('pointerdown', e=>{ e.stopPropagation(); startGame(); });
